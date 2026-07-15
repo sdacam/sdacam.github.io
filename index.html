@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ÜretimPratik Endüstriyel Yazılımlar — Fabrikanız için sahadan gelen çözümler</title>
+<meta name="description" content="Üretim takip, depo, etiketleme ve terazi/QR entegrasyonlarında 25+ yıllık saha tecrübesiyle küçük ve orta ölçekli fabrikalara yazılım desteği. İstanbul geneli.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cpolygon points='200,26 344,108 344,272 200,354 56,272 56,108' fill='%230E1418'/%3E%3Cpolygon points='200,26 344,108 344,272 200,354 56,272 56,108' fill='none' stroke='%23E8940C' stroke-width='16'/%3E%3Ctext x='200' y='245' font-family='Arial' font-weight='700' font-size='150' text-anchor='middle' letter-spacing='-6' fill='%23E9EDEF'%3E%C3%9CP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E1418;
+    --panel:#151D24;
+    --panel-2:#1B252D;
+    --line:#2A3740;
+    --paper:#E9EDEF;
+    --paper-dim:#93A2AB;
+    --amber:#E8940C;
+    --amber-dim:#B87409;
+    --cyan:#5FB8B0;
+    --danger-tape:repeating-linear-gradient(135deg, var(--amber) 0 14px, #14181C 14px 28px);
+    --radius: 3px;
+    --maxw: 1180px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 44px 44px;
+    opacity:0.12;
+    pointer-events:none;
+    z-index:0;
+  }
+  h1,h2,h3,.disp{
+    font-family:'Space Grotesk', sans-serif;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  a{ color:inherit; }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 28px; position:relative; z-index:1; }
+
+  /* NAV */
+  header.site{
+    position:sticky; top:0; z-index:50;
+    backdrop-filter: blur(10px);
+    background:rgba(14,20,24,0.85);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:var(--maxw); margin:0 auto; padding:16px 28px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; font-family:'Space Grotesk'; font-weight:700; font-size:17px; letter-spacing:0.02em; }
+  .brand .mark{
+    width:34px; height:34px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .brand .mark svg{ width:100%; height:100%; display:block; }
+  nav.links{ display:flex; gap:28px; font-size:14px; color:var(--paper-dim); }
+  nav.links a{ text-decoration:none; transition:color .15s; }
+  nav.links a:hover{ color:var(--amber); }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:11px 20px; border-radius:2px; font-weight:600; font-size:14px;
+    text-decoration:none; border:1px solid transparent; cursor:pointer;
+    font-family:'IBM Plex Sans';
+    transition:transform .12s ease, background .15s;
+  }
+  .btn-amber{ background:var(--amber); color:#14181C; }
+  .btn-amber:hover{ background:#FFAA2B; transform:translateY(-1px); }
+  .btn-ghost{ border-color:var(--line); color:var(--paper); }
+  .btn-ghost:hover{ border-color:var(--amber); color:var(--amber); }
+  .nav-cta{ display:flex; gap:10px; }
+
+  /* HERO */
+  .hero{ padding:96px 0 72px; position:relative; overflow:hidden; }
+  .hero-grid{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:56px; align-items:center; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'IBM Plex Mono'; font-size:12px; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--amber); border:1px solid var(--amber-dim); padding:6px 12px; border-radius:2px;
+    margin-bottom:22px;
+  }
+  .eyebrow::before{ content:""; width:6px; height:6px; background:var(--amber); border-radius:50%; }
+  .hero h1{ font-size:44px; line-height:1.12; font-weight:700; color:#fff; }
+  .hero h1 span{ color:var(--amber); }
+  .hero p.lead{ margin-top:20px; font-size:17px; color:var(--paper-dim); max-width:46ch; }
+  .hero-actions{ display:flex; gap:14px; margin-top:32px; flex-wrap:wrap; }
+  .hero-stats{ display:flex; gap:36px; margin-top:48px; flex-wrap:wrap; }
+  .stat .n{ font-family:'Space Grotesk'; font-size:26px; font-weight:700; color:#fff; }
+  .stat .l{ font-size:12px; color:var(--paper-dim); font-family:'IBM Plex Mono'; margin-top:2px; }
+
+  /* schematic svg panel */
+  .schematic{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:22px; position:relative;
+  }
+  .schematic .label-row{
+    display:flex; justify-content:space-between; font-family:'IBM Plex Mono'; font-size:11px; color:var(--paper-dim);
+    margin-bottom:14px; text-transform:uppercase; letter-spacing:0.06em;
+  }
+  .schematic .tape{ height:6px; background:var(--danger-tape); margin:0 -22px 18px; }
+
+  /* SECTIONS */
+  section{ padding:88px 0; position:relative; }
+  .section-head{ max-width:640px; margin-bottom:52px; }
+  .kicker{ font-family:'IBM Plex Mono'; font-size:12px; color:var(--amber); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:12px; display:block; }
+  .section-head h2{ font-size:30px; color:#fff; font-weight:700; }
+  .section-head p{ color:var(--paper-dim); margin-top:14px; font-size:15.5px; }
+
+  /* services grid */
+  .services{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
+  .svc{ background:var(--panel); padding:30px 26px; }
+  .svc .idx{ font-family:'IBM Plex Mono'; font-size:12px; color:var(--amber-dim); }
+  .svc h3{ font-size:18px; color:#fff; margin-top:14px; font-weight:600; }
+  .svc p{ font-size:14px; color:var(--paper-dim); margin-top:10px; }
+  .svc ul{ margin:16px 0 0; padding-left:18px; font-size:13.5px; color:var(--paper-dim); }
+  .svc li{ margin-bottom:6px; }
+
+  /* process */
+  .process{ display:grid; grid-template-columns:repeat(4,1fr); gap:0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .pstep{ padding:28px 22px; border-right:1px solid var(--line); position:relative; }
+  .pstep:last-child{ border-right:none; }
+  .pstep .num{ font-family:'IBM Plex Mono'; color:var(--amber); font-size:13px; }
+  .pstep h4{ font-family:'Space Grotesk'; color:#fff; font-size:15px; margin-top:10px; font-weight:600; }
+  .pstep p{ font-size:13px; color:var(--paper-dim); margin-top:8px; }
+
+  /* case studies */
+  .cases{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+  .case{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:26px;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .case .tag{ font-family:'IBM Plex Mono'; font-size:11px; color:var(--cyan); text-transform:uppercase; letter-spacing:0.06em; }
+  .case h3{ color:#fff; font-size:17px; font-weight:600; }
+  .case p{ font-size:14px; color:var(--paper-dim); }
+  .case .metric{ display:flex; gap:22px; margin-top:6px; border-top:1px solid var(--line); padding-top:14px; }
+  .case .metric div .m-n{ font-family:'Space Grotesk'; font-size:20px; color:var(--amber); font-weight:700; }
+  .case .metric div .m-l{ font-family:'IBM Plex Mono'; font-size:10.5px; color:var(--paper-dim); text-transform:uppercase; }
+
+  /* about */
+  .about-grid{ display:grid; grid-template-columns:0.9fr 1.1fr; gap:56px; align-items:start; }
+  .credentials{ display:flex; flex-direction:column; gap:0; border-top:1px solid var(--line); }
+  .cred{ display:flex; justify-content:space-between; padding:14px 0; border-bottom:1px solid var(--line); font-size:14px; }
+  .cred .k{ color:var(--paper-dim); }
+  .cred .v{ color:#fff; font-family:'IBM Plex Mono'; font-size:13px; }
+  .about-copy p{ color:var(--paper-dim); font-size:15.5px; margin-bottom:16px; }
+  .about-copy strong{ color:#fff; }
+
+  /* contact */
+  .contact-panel{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:48px; display:grid; grid-template-columns:1.1fr 0.9fr; gap:40px; align-items:center;
+    position:relative; overflow:hidden;
+  }
+  .contact-panel::before{ content:""; position:absolute; top:0; left:0; right:0; height:6px; background:var(--danger-tape); }
+  .contact-panel h2{ font-size:28px; color:#fff; }
+  .contact-panel p{ color:var(--paper-dim); margin-top:14px; font-size:15px; max-width:44ch; }
+  .contact-links{ display:flex; flex-direction:column; gap:14px; }
+  .clink{
+    display:flex; align-items:center; gap:12px; padding:16px 18px; background:var(--panel-2);
+    border:1px solid var(--line); border-radius:2px; text-decoration:none; transition:border-color .15s;
+  }
+  .clink:hover{ border-color:var(--amber); }
+  .clink .ico{ width:34px; height:34px; border:1px solid var(--amber-dim); border-radius:2px; display:flex; align-items:center; justify-content:center; color:var(--amber); font-family:'IBM Plex Mono'; font-size:14px; flex-shrink:0; }
+  .clink .txt .t1{ font-size:13px; color:var(--paper-dim); font-family:'IBM Plex Mono'; }
+  .clink .txt .t2{ font-size:15px; color:#fff; font-weight:500; margin-top:2px; }
+
+  footer{ border-top:1px solid var(--line); padding:32px 0; }
+  .footer-inner{ display:flex; justify-content:space-between; align-items:center; font-size:13px; color:var(--paper-dim); flex-wrap:wrap; gap:12px;}
+  .footer-inner .mono{ font-size:12px; }
+
+  @media (max-width: 900px){
+    .hero-grid, .about-grid, .contact-panel{ grid-template-columns:1fr; }
+    .services{ grid-template-columns:1fr; }
+    .process{ grid-template-columns:1fr 1fr; }
+    .pstep{ border-bottom:1px solid var(--line); }
+    .cases{ grid-template-columns:1fr; }
+    .hero h1{ font-size:32px; }
+    nav.links{ display:none; }
+    .contact-panel{ padding:28px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-inner">
+    <div class="brand">
+      <span class="mark">
+        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-label="ÜretimPratik logosu">
+          <polygon points="200,26 344,108 344,272 200,354 56,272 56,108" fill="none" stroke="#E8940C" stroke-width="14" stroke-linejoin="round"/>
+          <polygon points="200,66 310,130 310,258 200,322 90,258 90,130" fill="none" stroke="#E8940C" stroke-width="4" opacity="0.45"/>
+          <g stroke="#5FB8B0" stroke-width="9" fill="none" stroke-linecap="round">
+            <path d="M200,26 L200,4"/><circle cx="200" cy="4" r="10" fill="#5FB8B0"/>
+            <path d="M344,108 L368,94"/><circle cx="368" cy="94" r="10" fill="#5FB8B0"/>
+            <path d="M56,272 L32,286"/><circle cx="32" cy="286" r="10" fill="#5FB8B0"/>
+          </g>
+          <text x="200" y="242" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="150" text-anchor="middle" letter-spacing="-6" fill="#E9EDEF">ÜP</text>
+          <line x1="130" y1="270" x2="270" y2="270" stroke="#E8940C" stroke-width="8" stroke-dasharray="2 16" stroke-linecap="round"/>
+        </svg>
+      </span>
+      ÜRETİMPRATİK ENDÜSTRİYEL YAZILIMLAR
+    </div>
+    <nav class="links">
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#surec">Süreç</a>
+      <a href="#projeler">Projeler</a>
+      <a href="#hakkinda">Hakkımda</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-amber" href="https://wa.me/905531873452" target="_blank" rel="noopener">WhatsApp'tan Yaz</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">İstanbul Geneli</div>
+      <h1>Fabrikanızın sahasını bilen biri, <span>yazılımını da kurar.</span></h1>
+      <p class="lead">25 yılı aşkın üretim planlama ve fabrika yönetimi tecrübesini, Python ile geliştirdiğim üretim takip, depo ve etiketleme sistemleriyle birleştiriyorum. Sahada ne olduğunu bilmeden yazılan yazılım, rafta kalır — ben ikisini de biliyorum.</p>
+      <div class="hero-actions">
+        <a class="btn btn-amber" href="https://wa.me/905531873452" target="_blank" rel="noopener">Projenizi Anlatın →</a>
+        <a class="btn btn-ghost" href="#hizmetler">Hizmetleri Gör</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="n">25+</div><div class="l">YIL SAHA TECRÜBESİ</div></div>
+        <div class="stat"><div class="n">5</div><div class="l">SEKTÖR (KABLO, PLASTİK, METAL...)</div></div>
+        <div class="stat"><div class="n">A</div><div class="l">SINIFI İSG UZMANI</div></div>
+      </div>
+    </div>
+    <div class="schematic">
+      <div class="tape"></div>
+      <div class="label-row"><span>ÜRETİM HATTI — ŞEMA</span><span>REV. 01</span></div>
+      <svg viewBox="0 0 420 320" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Üretim takip sistemi şeması">
+        <defs>
+          <marker id="dot" markerWidth="6" markerHeight="6" refX="3" refY="3"><circle cx="3" cy="3" r="2.5" fill="#E8940C"/></marker>
+        </defs>
+        <!-- baseline -->
+        <line x1="20" y1="160" x2="400" y2="160" stroke="#2A3740" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <!-- stations -->
+        <g font-family="IBM Plex Mono" font-size="9" fill="#93A2AB">
+          <!-- station 1: reel -->
+          <circle cx="60" cy="160" r="26" fill="none" stroke="#5FB8B0" stroke-width="2"/>
+          <circle cx="60" cy="160" r="10" fill="none" stroke="#5FB8B0" stroke-width="1.5"/>
+          <text x="60" y="205" text-anchor="middle">TEL/HADDE</text>
+
+          <!-- connector -->
+          <line x1="86" y1="160" x2="140" y2="160" stroke="#2A3740" stroke-width="1.5" marker-end="url(#dot)"/>
+
+          <!-- station 2: QR scan -->
+          <rect x="140" y="136" width="48" height="48" fill="none" stroke="#E8940C" stroke-width="2" rx="2"/>
+          <rect x="150" y="146" width="10" height="10" fill="#E8940C"/>
+          <rect x="168" y="146" width="10" height="10" fill="none" stroke="#E8940C" stroke-width="1.5"/>
+          <rect x="150" y="164" width="10" height="10" fill="none" stroke="#E8940C" stroke-width="1.5"/>
+          <rect x="168" y="164" width="10" height="10" fill="#E8940C"/>
+          <text x="164" y="205" text-anchor="middle">QR OKUTMA</text>
+
+          <line x1="188" y1="160" x2="240" y2="160" stroke="#2A3740" stroke-width="1.5" marker-end="url(#dot)"/>
+
+          <!-- station 3: scale -->
+          <rect x="240" y="140" width="56" height="40" fill="none" stroke="#5FB8B0" stroke-width="2" rx="2"/>
+          <text x="268" y="165" text-anchor="middle" font-size="13" fill="#5FB8B0" font-weight="600">kg</text>
+          <text x="268" y="205" text-anchor="middle">TERAZİ (RS232)</text>
+
+          <line x1="296" y1="160" x2="348" y2="160" stroke="#2A3740" stroke-width="1.5" marker-end="url(#dot)"/>
+
+          <!-- station 4: db/print -->
+          <path d="M348 145 h40 v34 h-40 z M348 152 h40 M348 159 h40" fill="none" stroke="#E8940C" stroke-width="2"/>
+          <text x="368" y="205" text-anchor="middle">KAYIT + ETİKET</text>
+        </g>
+        <!-- annotation callouts -->
+        <g font-family="IBM Plex Mono" font-size="8.5" fill="#3A4750">
+          <line x1="60" y1="130" x2="60" y2="60" stroke="#2A3740" stroke-width="1"/>
+          <text x="66" y="55" fill="#93A2AB">SQLite · WAL mode</text>
+          <line x1="164" y1="130" x2="164" y2="40" stroke="#2A3740" stroke-width="1"/>
+          <text x="170" y="35" fill="#93A2AB">Çoklu PC · ağ üzerinden</text>
+          <line x1="368" y1="140" x2="368" y2="70" stroke="#2A3740" stroke-width="1"/>
+          <text x="290" y="65" fill="#93A2AB">Argox yazıcı · PIL bitmap</text>
+        </g>
+        <text x="20" y="290" font-family="IBM Plex Mono" font-size="9.5" fill="#5FB8B0">↳ Flask + Windows EXE (PyInstaller) olarak paketlenir</text>
+        <text x="20" y="308" font-family="IBM Plex Mono" font-size="9.5" fill="#93A2AB">↳ Kağıt takip, whatsapp bildirim, günlük otomatik yeniden başlatma</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section id="hizmetler">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Hizmetler</span>
+      <h2>Sahada karşılaşılan sorunlara göre kurulmuş çözümler.</h2>
+      <p>Her biri gerçek bir fabrika ihtiyacından doğdu — masa başında tasarlanmış genel şablonlar değil.</p>
+    </div>
+    <div class="services">
+      <div class="svc">
+        <div class="idx mono">01</div>
+        <h3>Üretim Takip Sistemleri</h3>
+        <p>QR kod tabanlı barkod okuma, iş emri takibi, vardiya ve verimlilik raporlama. Masaüstü uygulaması olarak paketlenir, kurulum tek tıkla.</p>
+        <ul>
+          <li>QR / barkod okuma entegrasyonu</li>
+          <li>Verimlilik ve fire raporları</li>
+          <li>Çoklu istasyon, tek merkezi veritabanı</li>
+        </ul>
+      </div>
+      <div class="svc">
+        <div class="idx mono">02</div>
+        <h3>Depo &amp; Etiketleme</h3>
+        <p>Palet/ürün etiketleme, terazi entegrasyonu, sevkiyat listeleri. Argox ve benzeri endüstriyel yazıcılarla doğrudan çalışır.</p>
+        <ul>
+          <li>RS232/USB terazi bağlantısı</li>
+          <li>Otomatik etiket basımı</li>
+          <li>Mobil QR ile çeki listesi kontrolü</li>
+        </ul>
+      </div>
+      <div class="svc">
+        <div class="idx mono">03</div>
+        <h3>Excel / VBA Otomasyonu</h3>
+        <p>Elle girilen Excel tablolarını, veritabanına bağlı otomatik raporlara dönüştürüyorum. Mevcut Excel alışkanlığınızı değiştirmeden.</p>
+        <ul>
+          <li>ODBC ile SQLite/Access bağlantısı</li>
+          <li>Çok sayfalı PDF/rapor üretimi</li>
+          <li>Departmanlar arası veri birleştirme</li>
+        </ul>
+      </div>
+      <div class="svc">
+        <div class="idx mono">04</div>
+        <h3>Üretim Planlama Danışmanlığı</h3>
+        <p>25 yıllık planlama tecrübesiyle, iş emri akışı, makine yükleme ve sevkiyat planlaması süreçlerinizi birlikte kurarız.</p>
+        <ul>
+          <li>Kapasite ve makine yükleme analizi</li>
+          <li>Temrin / sevkiyat planlama süreci</li>
+          <li>ISO 9001-14001 kayıt düzeni</li>
+        </ul>
+      </div>
+      <div class="svc">
+        <div class="idx mono">05</div>
+        <h3>Hesaplama Uygulamaları</h3>
+        <p>Tel çekme pay hesabı gibi sektöre özel hesaplama araçlarını, geçmiş verilerden öğrenen basit modellerle uygulamaya dönüştürüyorum.</p>
+        <ul>
+          <li>Sektöre özel katsayı / formül mantığı</li>
+          <li>Standartlara uygunluk (ör. TS/TLİ)</li>
+          <li>Excel tabanlı sistemden geçiş</li>
+        </ul>
+      </div>
+      <div class="svc">
+        <div class="idx mono">06</div>
+        <h3>Rota &amp; Lojistik Araçları</h3>
+        <p>Personel servis güzergahı, toplanma noktası optimizasyonu ve harita tabanlı planlama uygulamaları.</p>
+        <ul>
+          <li>Harita üzerinde güzergah optimizasyonu</li>
+          <li>WhatsApp ile şoför bilgilendirme</li>
+          <li>Canlı takip paneli</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="surec" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Nasıl Çalışıyoruz</span>
+      <h2>Dört adımda, sahaya inen bir süreç.</h2>
+    </div>
+    <div class="process">
+      <div class="pstep">
+        <div class="num mono">→ 1</div>
+        <h4>Sahayı Görüşürüz</h4>
+        <p>Yerinde veya görüntülü, mevcut süreci ve gerçek darboğazı birlikte tespit ederiz.</p>
+      </div>
+      <div class="pstep">
+        <div class="num mono">→ 2</div>
+        <h4>Küçük Bir Prototip</h4>
+        <p>Tüm hattı değil, en çok sorun çıkan noktayı önce çözen, hızlı bir ilk sürüm kurarız.</p>
+      </div>
+      <div class="pstep">
+        <div class="num mono">→ 3</div>
+        <h4>Sahada Test</h4>
+        <p>Gerçek makinede, gerçek personelle test edilir; donanım (terazi, yazıcı, QR) yerinde bağlanır.</p>
+      </div>
+      <div class="pstep">
+        <div class="num mono">→ 4</div>
+        <h4>Devreye Alma</h4>
+        <p>Windows uygulaması olarak paketlenir, kurulur, kısa bir eğitimle teslim edilir.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projeler">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Örnek Projeler</span>
+      <h2>Fabrika isimleri gizli tutuldu, senaryolar gerçek.</h2>
+      <p>Aşağıdaki projeler, kablo/tel ve genel imalat sektöründeki fabrikalarda hayata geçirdiğim gerçek sistemlerin genel anlatımıdır.</p>
+    </div>
+    <div class="cases">
+      <div class="case">
+        <span class="tag mono">Üretim Takip</span>
+        <h3>Çok İstasyonlu QR Takip Sistemi</h3>
+        <p>Konform, kağıt, cam ve depo bölümlerinde eş zamanlı çalışan, tek merkezi veritabanına bağlı bir üretim takip sistemi kuruldu. Her istasyon kendi bilgisayarında çalışıyor, veriler anlık birleşiyor.</p>
+        <div class="metric">
+          <div><div class="m-n">4</div><div class="m-l">Bölüm</div></div>
+          <div><div class="m-n">%↓</div><div class="m-l">Elle Kayıt</div></div>
+          <div><div class="m-n">7/24</div><div class="m-l">Otomatik Çalışma</div></div>
+        </div>
+      </div>
+      <div class="case">
+        <span class="tag mono">Depo / Etiketleme</span>
+        <h3>Terazi + Etiket Yazıcı Entegrasyonu</h3>
+        <p>Endüstriyel bir terazinin bilgisayara bağlanmasından, palet etiketlerinin otomatik basılmasına kadar uçtan uca bir sistem kuruldu. Birden fazla PC, tek yazıcı havuzuna yönlendiriliyor.</p>
+        <div class="metric">
+          <div><div class="m-n">RS232</div><div class="m-l">Bağlantı Tipi</div></div>
+          <div><div class="m-n">Argox</div><div class="m-l">Yazıcı Modeli</div></div>
+        </div>
+      </div>
+      <div class="case">
+        <span class="tag mono">Hesaplama Aracı</span>
+        <h3>Tel Çekme Pay Hesabı Uygulaması</h3>
+        <p>Excel'de elle yürütülen hadde pay hesaplamaları, geçmiş verilerden öğrenen bir masaüstü uygulamasına taşındı. Standarda uygunluk otomatik kontrol ediliyor.</p>
+        <div class="metric">
+          <div><div class="m-n">TLİ 6503</div><div class="m-l">Standart</div></div>
+          <div><div class="m-n">SQLite</div><div class="m-l">Veri Tabanı</div></div>
+        </div>
+      </div>
+      <div class="case">
+        <span class="tag mono">Lojistik</span>
+        <h3>Personel Servis Rota Optimizasyonu</h3>
+        <p>Toplanma noktalarının otomatik puanlanması, güzergah optimizasyonu ve şoförlere WhatsApp üzerinden anlık bilgilendirme sağlayan bir sistem geliştirildi.</p>
+        <div class="metric">
+          <div><div class="m-n">Harita</div><div class="m-l">Tabanlı Planlama</div></div>
+          <div><div class="m-n">Canlı</div><div class="m-l">Takip</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="hakkinda">
+  <div class="wrap about-grid">
+    <div>
+      <span class="kicker">Hakkımda</span>
+      <h2 style="color:#fff; font-size:26px; margin-bottom:24px;">Satılmış Çam</h2>
+      <div class="credentials">
+        <div class="cred"><span class="k">Unvan</span><span class="v">Üretim Planlama Sorumlusu · Ziraat Müh.</span></div>
+        <div class="cred"><span class="k">Tecrübe</span><span class="v">25+ Yıl</span></div>
+        <div class="cred"><span class="k">Sertifika</span><span class="v">A Sınıfı İSG Uzmanı</span></div>
+        <div class="cred"><span class="k">Sektörler</span><span class="v">Kablo/Tel, Metal, Plastik, Soğutma, Tarım</span></div>
+        <div class="cred"><span class="k">Konum</span><span class="v">Kartal, İstanbul — şehir geneline hizmet</span></div>
+        <div class="cred"><span class="k">Araçlar</span><span class="v">Python, Flask, SQLite, VBA, Claude Code</span></div>
+      </div>
+    </div>
+    <div class="about-copy">
+      <p><strong>25 yılı aşkın süredir</strong> fabrika sahasındayım — üretim planlamadan fabrika müdür yardımcılığına, kalite ve İSG sorumluluğundan makine yükleme planlarına kadar, imalatın hemen her tarafında çalıştım.</p>
+      <p>Son yıllarda buna bir yetkinlik daha ekledim: <strong>yapay zeka destekli araçlarla Python programlama.</strong> Bu sayede sahada gördüğüm gerçek sorunları — elle tutulan Excel tabloları, kaybolan üretim kayıtları, terazi ve yazıcı entegrasyonu eksiklikleri — doğrudan yazılıma dönüştürebiliyorum.</p>
+      <p>Bu site üzerinden benimle iletişime geçen küçük ve orta ölçekli fabrikalara, hem sahayı hem yazılımı bilen biri olarak destek veriyorum. İlk görüşme her zaman ücretsizdir.</p>
+    </div>
+  </div>
+</section>
+
+<section id="iletisim" style="padding-bottom:110px;">
+  <div class="wrap">
+    <div class="contact-panel">
+      <div>
+        <span class="kicker">İletişim</span>
+        <h2>Sorununuzu kısaca anlatın, birlikte bakalım.</h2>
+        <p>İstanbul genelindeki fabrikalara yerinde destek verebiliyorum. Şehir dışı için uzaktan görüşme ve devreye alma planı çıkarabiliriz.</p>
+      </div>
+      <div class="contact-links">
+        <a class="clink" href="https://wa.me/905531873452" target="_blank" rel="noopener">
+          <div class="ico">W</div>
+          <div class="txt"><div class="t1 mono">WHATSAPP</div><div class="t2">+90 553 187 34 52</div></div>
+        </a>
+        <a class="clink" href="mailto:satilmiscam@gmail.com">
+          <div class="ico">@</div>
+          <div class="txt"><div class="t1 mono">E-POSTA</div><div class="t2">satilmiscam@gmail.com</div></div>
+        </a>
+        <div class="clink" style="cursor:default;">
+          <div class="ico">📍</div>
+          <div class="txt"><div class="t1 mono">KONUM</div><div class="t2">Kartal, İstanbul — şehir geneline hizmet</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div>© 2026 ÜretimPratik Endüstriyel Yazılımlar — Satılmış Çam</div>
+    <div class="mono">Kartal · İstanbul(Asya)</div>
+  </div>
+</footer>
+
+</body>
+</html>
