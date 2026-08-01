@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Depo ve Etiketleme Sistemi İstanbul | ÜretimPratik Endüstriyel Yazılımlar</title>
+<meta name="description" content="Terazi (RS232) entegrasyonu, otomatik etiket basımı ve QR kodlu sevkiyat kontrolü. İstanbul'daki fabrikalar için depo ve etiketleme yazılımı.">
+<link rel="canonical" href="https://uretimpratik.com.tr/depo-etiketleme-sistemi-istanbul.html">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cpolygon points='200,26 344,108 344,272 200,354 56,272 56,108' fill='%230E1418'/%3E%3Cpolygon points='200,26 344,108 344,272 200,354 56,272 56,108' fill='none' stroke='%23E8940C' stroke-width='16'/%3E%3Ctext x='200' y='245' font-family='Arial' font-weight='700' font-size='150' text-anchor='middle' letter-spacing='-6' fill='%23E9EDEF'%3E%C3%9CP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E1418; --panel:#151D24; --panel-2:#1B252D; --line:#2A3740;
+    --paper:#E9EDEF; --paper-dim:#93A2AB; --amber:#E8940C; --amber-dim:#B87409; --cyan:#5FB8B0;
+    --danger-tape:repeating-linear-gradient(135deg, var(--amber) 0 14px, #14181C 14px 28px);
+    --radius: 3px; --maxw: 900px;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--ink); color:var(--paper); font-family:'IBM Plex Sans', sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  body::before{ content:""; position:fixed; inset:0; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 44px 44px; opacity:0.12; pointer-events:none; z-index:0; }
+  h1,h2,h3{ font-family:'Space Grotesk', sans-serif; letter-spacing:-0.01em; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  a{ color:var(--amber); }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 24px; position:relative; z-index:1; }
+  header.site{ position:sticky; top:0; z-index:50; backdrop-filter: blur(10px); background:rgba(14,20,24,0.85); border-bottom:1px solid var(--line); }
+  .nav-inner{ max-width:1180px; margin:0 auto; padding:16px 28px; display:flex; align-items:center; justify-content:space-between; }
+  .brand{ display:flex; align-items:center; gap:10px; font-family:'Space Grotesk'; font-weight:700; font-size:16px; letter-spacing:0.02em; text-decoration:none; color:var(--paper); }
+  .brand .mark{ width:30px; height:30px; flex-shrink:0; }
+  .brand .mark svg{ width:100%; height:100%; display:block; }
+  .btn{ display:inline-flex; align-items:center; gap:8px; padding:11px 20px; border-radius:2px; font-weight:600; font-size:14px; text-decoration:none; cursor:pointer; }
+  .btn-amber{ background:var(--amber); color:#14181C; }
+  main{ padding:64px 0 96px; }
+  .breadcrumb{ font-family:'IBM Plex Mono'; font-size:12px; color:var(--paper-dim); margin-bottom:24px; }
+  .breadcrumb a{ color:var(--paper-dim); text-decoration:none; }
+  .breadcrumb a:hover{ color:var(--amber); }
+  .eyebrow{ display:inline-flex; align-items:center; gap:8px; font-family:'IBM Plex Mono'; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--amber); border:1px solid var(--amber-dim); padding:6px 12px; border-radius:2px; margin-bottom:20px; }
+  .eyebrow::before{ content:""; width:6px; height:6px; background:var(--amber); border-radius:50%; }
+  h1{ font-size:36px; line-height:1.18; font-weight:700; color:#fff; margin-bottom:18px; }
+  .lead{ font-size:17px; color:var(--paper-dim); margin-bottom:40px; max-width:60ch; }
+  h2{ font-size:22px; color:#fff; margin:44px 0 16px; font-weight:600; }
+  p{ color:var(--paper-dim); font-size:15.5px; margin:0 0 14px; }
+  ul.feat{ margin:20px 0; padding:0; list-style:none; }
+  ul.feat li{ padding:12px 0 12px 28px; border-bottom:1px solid var(--line); position:relative; color:var(--paper); font-size:15px; }
+  ul.feat li::before{ content:"→"; position:absolute; left:0; color:var(--amber); font-family:'IBM Plex Mono'; }
+  .faq-item{ border-bottom:1px solid var(--line); padding:18px 0; }
+  .faq-item h3{ font-size:16px; color:#fff; margin-bottom:8px; font-weight:600; }
+  .faq-item p{ margin:0; }
+  .cta-box{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:32px; margin-top:48px; text-align:center; position:relative; overflow:hidden; }
+  .cta-box::before{ content:""; position:absolute; top:0; left:0; right:0; height:5px; background:var(--danger-tape); }
+  .cta-box h2{ margin-top:0; }
+  footer{ border-top:1px solid var(--line); padding:28px 0; }
+  .footer-inner{ max-width:1180px; margin:0 auto; padding:0 28px; display:flex; justify-content:space-between; font-size:13px; color:var(--paper-dim); flex-wrap:wrap; gap:12px; }
+  @media (max-width:640px){ h1{font-size:28px;} }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">
+      <span class="mark"><svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><polygon points="200,26 344,108 344,272 200,354 56,272 56,108" fill="none" stroke="#E8940C" stroke-width="14" stroke-linejoin="round"/><text x="200" y="242" font-family="Arial" font-weight="700" font-size="150" text-anchor="middle" letter-spacing="-6" fill="#E9EDEF">ÜP</text></svg></span>
+      ÜRETİMPRATİK ENDÜSTRİYEL YAZILIMLAR
+    </a>
+    <a class="btn btn-amber" href="https://wa.me/905531873452" target="_blank" rel="noopener">WhatsApp'tan Yaz</a>
+  </div>
+</header>
+<main>
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">Ana Sayfa</a> / Depo ve Etiketleme Sistemi</div>
+    <div class="eyebrow">İstanbul Geneli</div>
+    <h1>İstanbul'da Depo ve Etiketleme Sistemi</h1>
+    <p class="lead">Endüstriyel terazinizi bilgisayara bağlıyor, palet/ürün etiketlerini otomatik bastırıyor ve sevkiyat listelerini QR kod ile kontrol edilebilir hale getiriyoruz.</p>
+
+    <h2>Ne İşe Yarar</h2>
+    <p>Depo ve etiketleme sistemi, tartım verisini doğrudan teraziden alarak elle giriş hatasını ortadan kaldırır ve etiketi otomatik olarak yazdırır. Sevkiyat öncesi QR kod ile çeki listesi kontrolü yapılabilir.</p>
+    <ul class="feat">
+      <li>RS232/USB üzerinden endüstriyel terazi entegrasyonu</li>
+      <li>Argox ve benzeri endüstriyel yazıcılarla otomatik etiket basımı</li>
+      <li>Birden fazla bilgisayar, tek yazıcı havuzuna yönlendirme</li>
+      <li>Mobil QR okutma ile sevkiyat/çeki listesi kontrolü</li>
+    </ul>
+    <h2>Kimler İçin Uygun</h2>
+    <p>Palet veya rulo bazlı ürün sevk eden, tartım ve etiketlemenin sık tekrarlandığı üretim ve depo süreçlerine sahip fabrikalar için uygundur.</p>
+    <div class="faq-item">
+      <h3>Hangi terazi markalarıyla çalışır?</h3>
+      <p>RS232 seri çıkışı olan çoğu endüstriyel teraziyle çalışabilir. Markanızı belirtirseniz uyumluluğu birlikte kontrol ederiz.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Etiket yazıcım Argox değilse olur mu?</h3>
+      <p>Genelde evet — çoğu endüstriyel etiket yazıcı benzer komut setlerini destekler. Yazıcı modelinizi görüşmede konuşuruz.</p>
+    </div>
+    
+    <div class="cta-box">
+      <h2>Projenizi konuşalım</h2>
+      <p>İlk görüşme ücretsizdir. WhatsApp üzerinden birkaç dakikada durumunuzu değerlendirelim.</p>
+      <a class="btn btn-amber" href="https://wa.me/905531873452" target="_blank" rel="noopener">WhatsApp'tan Yaz →</a>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-inner">
+    <div>© 2026 ÜretimPratik Endüstriyel Yazılımlar — Satılmış Çam</div>
+    <div class="mono">Kartal · İstanbul</div>
+  </div>
+</footer>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Üretim Takip Yazılımı İstanbul | ÜretimPratik Endüstriyel Yazılımlar</title>
+<meta name="description" content="İstanbul'daki küçük ve orta ölçekli fabrikalara QR kod tabanlı üretim takip yazılımı. Çok istasyonlu, gerçek zamanlı üretim ve verimlilik raporlama.">
+<link rel="canonical" href="https://uretimpratik.com.tr/uretim-takip-yazilimi-istanbul.html">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cpolygon points='200,26 344,108 344,272 200,354 56,272 56,108' fill='%230E1418'/%3E%3Cpolygon points='200,26 344,108 344,272 200,354 56,272 56,108' fill='none' stroke='%23E8940C' stroke-width='16'/%3E%3Ctext x='200' y='245' font-family='Arial' font-weight='700' font-size='150' text-anchor='middle' letter-spacing='-6' fill='%23E9EDEF'%3E%C3%9CP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E1418; --panel:#151D24; --panel-2:#1B252D; --line:#2A3740;
+    --paper:#E9EDEF; --paper-dim:#93A2AB; --amber:#E8940C; --amber-dim:#B87409; --cyan:#5FB8B0;
+    --danger-tape:repeating-linear-gradient(135deg, var(--amber) 0 14px, #14181C 14px 28px);
+    --radius: 3px; --maxw: 900px;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--ink); color:var(--paper); font-family:'IBM Plex Sans', sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  body::before{ content:""; position:fixed; inset:0; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 44px 44px; opacity:0.12; pointer-events:none; z-index:0; }
+  h1,h2,h3{ font-family:'Space Grotesk', sans-serif; letter-spacing:-0.01em; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  a{ color:var(--amber); }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 24px; position:relative; z-index:1; }
+  header.site{ position:sticky; top:0; z-index:50; backdrop-filter: blur(10px); background:rgba(14,20,24,0.85); border-bottom:1px solid var(--line); }
+  .nav-inner{ max-width:1180px; margin:0 auto; padding:16px 28px; display:flex; align-items:center; justify-content:space-between; }
+  .brand{ display:flex; align-items:center; gap:10px; font-family:'Space Grotesk'; font-weight:700; font-size:16px; letter-spacing:0.02em; text-decoration:none; color:var(--paper); }
+  .brand .mark{ width:30px; height:30px; flex-shrink:0; }
+  .brand .mark svg{ width:100%; height:100%; display:block; }
+  .btn{ display:inline-flex; align-items:center; gap:8px; padding:11px 20px; border-radius:2px; font-weight:600; font-size:14px; text-decoration:none; cursor:pointer; }
+  .btn-amber{ background:var(--amber); color:#14181C; }
+  main{ padding:64px 0 96px; }
+  .breadcrumb{ font-family:'IBM Plex Mono'; font-size:12px; color:var(--paper-dim); margin-bottom:24px; }
+  .breadcrumb a{ color:var(--paper-dim); text-decoration:none; }
+  .breadcrumb a:hover{ color:var(--amber); }
+  .eyebrow{ display:inline-flex; align-items:center; gap:8px; font-family:'IBM Plex Mono'; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--amber); border:1px solid var(--amber-dim); padding:6px 12px; border-radius:2px; margin-bottom:20px; }
+  .eyebrow::before{ content:""; width:6px; height:6px; background:var(--amber); border-radius:50%; }
+  h1{ font-size:36px; line-height:1.18; font-weight:700; color:#fff; margin-bottom:18px; }
+  .lead{ font-size:17px; color:var(--paper-dim); margin-bottom:40px; max-width:60ch; }
+  h2{ font-size:22px; color:#fff; margin:44px 0 16px; font-weight:600; }
+  p{ color:var(--paper-dim); font-size:15.5px; margin:0 0 14px; }
+  ul.feat{ margin:20px 0; padding:0; list-style:none; }
+  ul.feat li{ padding:12px 0 12px 28px; border-bottom:1px solid var(--line); position:relative; color:var(--paper); font-size:15px; }
+  ul.feat li::before{ content:"→"; position:absolute; left:0; color:var(--amber); font-family:'IBM Plex Mono'; }
+  .faq-item{ border-bottom:1px solid var(--line); padding:18px 0; }
+  .faq-item h3{ font-size:16px; color:#fff; margin-bottom:8px; font-weight:600; }
+  .faq-item p{ margin:0; }
+  .cta-box{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:32px; margin-top:48px; text-align:center; position:relative; overflow:hidden; }
+  .cta-box::before{ content:""; position:absolute; top:0; left:0; right:0; height:5px; background:var(--danger-tape); }
+  .cta-box h2{ margin-top:0; }
+  footer{ border-top:1px solid var(--line); padding:28px 0; }
+  .footer-inner{ max-width:1180px; margin:0 auto; padding:0 28px; display:flex; justify-content:space-between; font-size:13px; color:var(--paper-dim); flex-wrap:wrap; gap:12px; }
+  @media (max-width:640px){ h1{font-size:28px;} }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">
+      <span class="mark"><svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><polygon points="200,26 344,108 344,272 200,354 56,272 56,108" fill="none" stroke="#E8940C" stroke-width="14" stroke-linejoin="round"/><text x="200" y="242" font-family="Arial" font-weight="700" font-size="150" text-anchor="middle" letter-spacing="-6" fill="#E9EDEF">ÜP</text></svg></span>
+      ÜRETİMPRATİK ENDÜSTRİYEL YAZILIMLAR
+    </a>
+    <a class="btn btn-amber" href="https://wa.me/905531873452" target="_blank" rel="noopener">WhatsApp'tan Yaz</a>
+  </div>
+</header>
+<main>
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">Ana Sayfa</a> / Üretim Takip Yazılımı</div>
+    <div class="eyebrow">İstanbul Geneli</div>
+    <h1>İstanbul'da Üretim Takip Yazılımı</h1>
+    <p class="lead">Kağıt üzerinde veya dağınık Excel tablolarında tutulan üretim kayıtlarını, QR kod okutmalı, çok istasyonlu bir üretim takip sistemine taşıyoruz. Sistem, İstanbul genelindeki küçük ve orta ölçekli fabrikalarda kullanılmak üzere, sahadaki gerçek ihtiyaca göre kuruluyor.</p>
+
+    <h2>Ne İşe Yarar</h2>
+    <p>Üretim takip yazılımı, her iş emrinin hangi aşamada olduğunu, hangi makinede ne kadar süre işlendiğini ve kim tarafından üretildiğini anlık olarak kayıt altına alır. QR kod okutarak veri girişi yapılır, elle yazım hatası ortadan kalkar.</p>
+    <ul class="feat">
+      <li>QR / barkod okuma ile hızlı iş emri takibi</li>
+      <li>Çoklu istasyon (bölüm), tek merkezi veritabanı — SQLite WAL mode ile eş zamanlı erişim</li>
+      <li>Günlük, aylık, yıllık verimlilik ve fire raporları</li>
+      <li>Windows uygulaması (PyInstaller) olarak paketlenir, ekstra sunucu gerekmez</li>
+    </ul>
+    <h2>Kimler İçin Uygun</h2>
+    <p>Kablo/tel, metal, plastik, ambalaj gibi seri üretim yapan, 5-100 kişilik küçük ve orta ölçekli fabrikalar için uygundur. Büyük ERP sistemlerinin gereksiz kaldığı, ama Excel'in de yetersiz kaldığı ölçekte devreye girer.</p>
+    <div class="faq-item">
+      <h3>Kurulum ne kadar sürer?</h3>
+      <p>İlk görüşmeden sonra küçük bir prototip genelde 1-2 hafta içinde sahada test edilebilir hale gelir. Tam devreye alma, fabrikanın büyüklüğüne göre değişir.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Mevcut Excel tablolarımızı kaybeder miyiz?</h3>
+      <p>Hayır. Sistem, mevcut verilerinizi içe aktaracak şekilde kurulur; geçiş kademeli yapılabilir.</p>
+    </div>
+    
+    <div class="cta-box">
+      <h2>Projenizi konuşalım</h2>
+      <p>İlk görüşme ücretsizdir. WhatsApp üzerinden birkaç dakikada durumunuzu değerlendirelim.</p>
+      <a class="btn btn-amber" href="https://wa.me/905531873452" target="_blank" rel="noopener">WhatsApp'tan Yaz →</a>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-inner">
+    <div>© 2026 ÜretimPratik Endüstriyel Yazılımlar — Satılmış Çam</div>
+    <div class="mono">Kartal · İstanbul</div>
+  </div>
+</footer>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personel Servis Rota Yazılımı İstanbul | ÜretimPratik</title>
+<meta name="description" content="Fabrika personel servis güzergahı optimizasyonu, canlı takip ve WhatsApp bildirimli rota yazılımı. İstanbul genelinde hizmet.">
+<link rel="canonical" href="https://uretimpratik.com.tr/personel-servis-rota-yazilimi-istanbul.html">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cpolygon points='200,26 344,108 344,272 200,354 56,272 56,108' fill='%230E1418'/%3E%3Cpolygon points='200,26 344,108 344,272 200,354 56,272 56,108' fill='none' stroke='%23E8940C' stroke-width='16'/%3E%3Ctext x='200' y='245' font-family='Arial' font-weight='700' font-size='150' text-anchor='middle' letter-spacing='-6' fill='%23E9EDEF'%3E%C3%9CP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E1418; --panel:#151D24; --panel-2:#1B252D; --line:#2A3740;
+    --paper:#E9EDEF; --paper-dim:#93A2AB; --amber:#E8940C; --amber-dim:#B87409; --cyan:#5FB8B0;
+    --danger-tape:repeating-linear-gradient(135deg, var(--amber) 0 14px, #14181C 14px 28px);
+    --radius: 3px; --maxw: 900px;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--ink); color:var(--paper); font-family:'IBM Plex Sans', sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  body::before{ content:""; position:fixed; inset:0; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 44px 44px; opacity:0.12; pointer-events:none; z-index:0; }
+  h1,h2,h3{ font-family:'Space Grotesk', sans-serif; letter-spacing:-0.01em; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  a{ color:var(--amber); }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 24px; position:relative; z-index:1; }
+  header.site{ position:sticky; top:0; z-index:50; backdrop-filter: blur(10px); background:rgba(14,20,24,0.85); border-bottom:1px solid var(--line); }
+  .nav-inner{ max-width:1180px; margin:0 auto; padding:16px 28px; display:flex; align-items:center; justify-content:space-between; }
+  .brand{ display:flex; align-items:center; gap:10px; font-family:'Space Grotesk'; font-weight:700; font-size:16px; letter-spacing:0.02em; text-decoration:none; color:var(--paper); }
+  .brand .mark{ width:30px; height:30px; flex-shrink:0; }
+  .brand .mark svg{ width:100%; height:100%; display:block; }
+  .btn{ display:inline-flex; align-items:center; gap:8px; padding:11px 20px; border-radius:2px; font-weight:600; font-size:14px; text-decoration:none; cursor:pointer; }
+  .btn-amber{ background:var(--amber); color:#14181C; }
+  main{ padding:64px 0 96px; }
+  .breadcrumb{ font-family:'IBM Plex Mono'; font-size:12px; color:var(--paper-dim); margin-bottom:24px; }
+  .breadcrumb a{ color:var(--paper-dim); text-decoration:none; }
+  .breadcrumb a:hover{ color:var(--amber); }
+  .eyebrow{ display:inline-flex; align-items:center; gap:8px; font-family:'IBM Plex Mono'; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--amber); border:1px solid var(--amber-dim); padding:6px 12px; border-radius:2px; margin-bottom:20px; }
+  .eyebrow::before{ content:""; width:6px; height:6px; background:var(--amber); border-radius:50%; }
+  h1{ font-size:36px; line-height:1.18; font-weight:700; color:#fff; margin-bottom:18px; }
+  .lead{ font-size:17px; color:var(--paper-dim); margin-bottom:40px; max-width:60ch; }
+  h2{ font-size:22px; color:#fff; margin:44px 0 16px; font-weight:600; }
+  p{ color:var(--paper-dim); font-size:15.5px; margin:0 0 14px; }
+  ul.feat{ margin:20px 0; padding:0; list-style:none; }
+  ul.feat li{ padding:12px 0 12px 28px; border-bottom:1px solid var(--line); position:relative; color:var(--paper); font-size:15px; }
+  ul.feat li::before{ content:"→"; position:absolute; left:0; color:var(--amber); font-family:'IBM Plex Mono'; }
+  .faq-item{ border-bottom:1px solid var(--line); padding:18px 0; }
+  .faq-item h3{ font-size:16px; color:#fff; margin-bottom:8px; font-weight:600; }
+  .faq-item p{ margin:0; }
+  .cta-box{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:32px; margin-top:48px; text-align:center; position:relative; overflow:hidden; }
+  .cta-box::before{ content:""; position:absolute; top:0; left:0; right:0; height:5px; background:var(--danger-tape); }
+  .cta-box h2{ margin-top:0; }
+  footer{ border-top:1px solid var(--line); padding:28px 0; }
+  .footer-inner{ max-width:1180px; margin:0 auto; padding:0 28px; display:flex; justify-content:space-between; font-size:13px; color:var(--paper-dim); flex-wrap:wrap; gap:12px; }
+  @media (max-width:640px){ h1{font-size:28px;} }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">
+      <span class="mark"><svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><polygon points="200,26 344,108 344,272 200,354 56,272 56,108" fill="none" stroke="#E8940C" stroke-width="14" stroke-linejoin="round"/><text x="200" y="242" font-family="Arial" font-weight="700" font-size="150" text-anchor="middle" letter-spacing="-6" fill="#E9EDEF">ÜP</text></svg></span>
+      ÜRETİMPRATİK ENDÜSTRİYEL YAZILIMLAR
+    </a>
+    <a class="btn btn-amber" href="https://wa.me/905531873452" target="_blank" rel="noopener">WhatsApp'tan Yaz</a>
+  </div>
+</header>
+<main>
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">Ana Sayfa</a> / Personel Servis Rota Yazılımı</div>
+    <div class="eyebrow">İstanbul Geneli</div>
+    <h1>İstanbul'da Personel Servis Rota Yazılımı</h1>
+    <p class="lead">Fabrika personel servis güzergahlarını harita üzerinde optimize eden, şoförlere WhatsApp üzerinden bildirim gönderen ve canlı takip sağlayan bir sistem kuruyoruz.</p>
+
+    <h2>Ne İşe Yarar</h2>
+    <p>Personel sayısı arttıkça elle planlanan servis güzergahları verimsizleşir. Bu sistem, toplanma noktalarını otomatik puanlayarak en kısa/en verimli güzergahı önerir.</p>
+    <ul class="feat">
+      <li>Harita üzerinde güzergah optimizasyonu (OpenRouteService tabanlı)</li>
+      <li>Güzergah tersine çevirme ve tercih edilen yol seçimi</li>
+      <li>Şoförlere WhatsApp üzerinden anlık bilgilendirme</li>
+      <li>Canlı takip paneli, mobil erişim (ngrok ile)</li>
+    </ul>
+    <h2>Kimler İçin Uygun</h2>
+    <p>Birden fazla servis güzergahı işleten, personel sayısı 30'un üzerinde olan fabrikalar için özellikle faydalıdır.</p>
+    
+    <div class="cta-box">
+      <h2>Projenizi konuşalım</h2>
+      <p>İlk görüşme ücretsizdir. WhatsApp üzerinden birkaç dakikada durumunuzu değerlendirelim.</p>
+      <a class="btn btn-amber" href="https://wa.me/905531873452" target="_blank" rel="noopener">WhatsApp'tan Yaz →</a>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-inner">
+    <div>© 2026 ÜretimPratik Endüstriyel Yazılımlar — Satılmış Çam</div>
+    <div class="mono">Kartal · İstanbul</div>
+  </div>
+</footer>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Endüstriyel Hesaplama Uygulamaları | ÜretimPratik</title>
+<meta name="description" content="Tel çekme pay hesabı gibi sektöre özel hesaplama araçlarını, geçmiş verilerden öğrenen uygulamalara dönüştürüyoruz.">
+<link rel="canonical" href="https://uretimpratik.com.tr/endustriyel-hesaplama-uygulamalari.html">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cpolygon points='200,26 344,108 344,272 200,354 56,272 56,108' fill='%230E1418'/%3E%3Cpolygon points='200,26 344,108 344,272 200,354 56,272 56,108' fill='none' stroke='%23E8940C' stroke-width='16'/%3E%3Ctext x='200' y='245' font-family='Arial' font-weight='700' font-size='150' text-anchor='middle' letter-spacing='-6' fill='%23E9EDEF'%3E%C3%9CP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E1418; --panel:#151D24; --panel-2:#1B252D; --line:#2A3740;
+    --paper:#E9EDEF; --paper-dim:#93A2AB; --amber:#E8940C; --amber-dim:#B87409; --cyan:#5FB8B0;
+    --danger-tape:repeating-linear-gradient(135deg, var(--amber) 0 14px, #14181C 14px 28px);
+    --radius: 3px; --maxw: 900px;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--ink); color:var(--paper); font-family:'IBM Plex Sans', sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  body::before{ content:""; position:fixed; inset:0; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 44px 44px; opacity:0.12; pointer-events:none; z-index:0; }
+  h1,h2,h3{ font-family:'Space Grotesk', sans-serif; letter-spacing:-0.01em; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  a{ color:var(--amber); }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 24px; position:relative; z-index:1; }
+  header.site{ position:sticky; top:0; z-index:50; backdrop-filter: blur(10px); background:rgba(14,20,24,0.85); border-bottom:1px solid var(--line); }
+  .nav-inner{ max-width:1180px; margin:0 auto; padding:16px 28px; display:flex; align-items:center; justify-content:space-between; }
+  .brand{ display:flex; align-items:center; gap:10px; font-family:'Space Grotesk'; font-weight:700; font-size:16px; letter-spacing:0.02em; text-decoration:none; color:var(--paper); }
+  .brand .mark{ width:30px; height:30px; flex-shrink:0; }
+  .brand .mark svg{ width:100%; height:100%; display:block; }
+  .btn{ display:inline-flex; align-items:center; gap:8px; padding:11px 20px; border-radius:2px; font-weight:600; font-size:14px; text-decoration:none; cursor:pointer; }
+  .btn-amber{ background:var(--amber); color:#14181C; }
+  main{ padding:64px 0 96px; }
+  .breadcrumb{ font-family:'IBM Plex Mono'; font-size:12px; color:var(--paper-dim); margin-bottom:24px; }
+  .breadcrumb a{ color:var(--paper-dim); text-decoration:none; }
+  .breadcrumb a:hover{ color:var(--amber); }
+  .eyebrow{ display:inline-flex; align-items:center; gap:8px; font-family:'IBM Plex Mono'; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--amber); border:1px solid var(--amber-dim); padding:6px 12px; border-radius:2px; margin-bottom:20px; }
+  .eyebrow::before{ content:""; width:6px; height:6px; background:var(--amber); border-radius:50%; }
+  h1{ font-size:36px; line-height:1.18; font-weight:700; color:#fff; margin-bottom:18px; }
+  .lead{ font-size:17px; color:var(--paper-dim); margin-bottom:40px; max-width:60ch; }
+  h2{ font-size:22px; color:#fff; margin:44px 0 16px; font-weight:600; }
+  p{ color:var(--paper-dim); font-size:15.5px; margin:0 0 14px; }
+  ul.feat{ margin:20px 0; padding:0; list-style:none; }
+  ul.feat li{ padding:12px 0 12px 28px; border-bottom:1px solid var(--line); position:relative; color:var(--paper); font-size:15px; }
+  ul.feat li::before{ content:"→"; position:absolute; left:0; color:var(--amber); font-family:'IBM Plex Mono'; }
+  .faq-item{ border-bottom:1px solid var(--line); padding:18px 0; }
+  .faq-item h3{ font-size:16px; color:#fff; margin-bottom:8px; font-weight:600; }
+  .faq-item p{ margin:0; }
+  .cta-box{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:32px; margin-top:48px; text-align:center; position:relative; overflow:hidden; }
+  .cta-box::before{ content:""; position:absolute; top:0; left:0; right:0; height:5px; background:var(--danger-tape); }
+  .cta-box h2{ margin-top:0; }
+  footer{ border-top:1px solid var(--line); padding:28px 0; }
+  .footer-inner{ max-width:1180px; margin:0 auto; padding:0 28px; display:flex; justify-content:space-between; font-size:13px; color:var(--paper-dim); flex-wrap:wrap; gap:12px; }
+  @media (max-width:640px){ h1{font-size:28px;} }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">
+      <span class="mark"><svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><polygon points="200,26 344,108 344,272 200,354 56,272 56,108" fill="none" stroke="#E8940C" stroke-width="14" stroke-linejoin="round"/><text x="200" y="242" font-family="Arial" font-weight="700" font-size="150" text-anchor="middle" letter-spacing="-6" fill="#E9EDEF">ÜP</text></svg></span>
+      ÜRETİMPRATİK ENDÜSTRİYEL YAZILIMLAR
+    </a>
+    <a class="btn btn-amber" href="https://wa.me/905531873452" target="_blank" rel="noopener">WhatsApp'tan Yaz</a>
+  </div>
+</header>
+<main>
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">Ana Sayfa</a> / Endüstriyel Hesaplama Uygulamaları</div>
+    <div class="eyebrow">İstanbul Geneli</div>
+    <h1>Endüstriyel Hesaplama Uygulamaları</h1>
+    <p class="lead">Tel çekme pay hesabı gibi sektöre özel, standartlara bağlı hesaplama işlerini; geçmiş üretim verilerinden öğrenen, Excel'den daha hızlı ve tutarlı masaüstü uygulamalarına dönüştürüyoruz.</p>
+
+    <h2>Ne İşe Yarar</h2>
+    <p>Kablo/tel üretiminde hadde pay hesabı gibi işlemler genelde elle veya karmaşık Excel formülleriyle yapılır. Bu uygulamalar, aynı hesaplamayı standart bir arayüzden, geçmiş verilerle karşılaştırarak yapar.</p>
+    <ul class="feat">
+      <li>Sektöre özel katsayı/formül mantığının yazılıma aktarılması</li>
+      <li>TS/TLİ gibi standartlara uygunluk kontrolü</li>
+      <li>Geçmiş üretim verilerinden öğrenen (KNN tabanlı) katsayı önerileri</li>
+      <li>Excel tabanlı sistemden sorunsuz geçiş</li>
+    </ul>
+    <h2>Kimler İçin Uygun</h2>
+    <p>Kablo/tel çekme, izolasyon veya benzer tekrarlayan teknik hesaplamalarla uğraşan üretim planlama ve mühendislik ekipleri için uygundur.</p>
+    
+    <div class="cta-box">
+      <h2>Projenizi konuşalım</h2>
+      <p>İlk görüşme ücretsizdir. WhatsApp üzerinden birkaç dakikada durumunuzu değerlendirelim.</p>
+      <a class="btn btn-amber" href="https://wa.me/905531873452" target="_blank" rel="noopener">WhatsApp'tan Yaz →</a>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-inner">
+    <div>© 2026 ÜretimPratik Endüstriyel Yazılımlar — Satılmış Çam</div>
+    <div class="mono">Kartal · İstanbul</div>
+  </div>
+</footer>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Üretim Planlama Danışmanlığı İstanbul | ÜretimPratik</title>
+<meta name="description" content="25 yıllık üretim planlama tecrübesiyle İstanbul'daki fabrikalara iş emri akışı, makine yükleme ve sevkiyat planlaması danışmanlığı.">
+<link rel="canonical" href="https://uretimpratik.com.tr/uretim-planlama-danismanligi-istanbul.html">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cpolygon points='200,26 344,108 344,272 200,354 56,272 56,108' fill='%230E1418'/%3E%3Cpolygon points='200,26 344,108 344,272 200,354 56,272 56,108' fill='none' stroke='%23E8940C' stroke-width='16'/%3E%3Ctext x='200' y='245' font-family='Arial' font-weight='700' font-size='150' text-anchor='middle' letter-spacing='-6' fill='%23E9EDEF'%3E%C3%9CP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E1418; --panel:#151D24; --panel-2:#1B252D; --line:#2A3740;
+    --paper:#E9EDEF; --paper-dim:#93A2AB; --amber:#E8940C; --amber-dim:#B87409; --cyan:#5FB8B0;
+    --danger-tape:repeating-linear-gradient(135deg, var(--amber) 0 14px, #14181C 14px 28px);
+    --radius: 3px; --maxw: 900px;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--ink); color:var(--paper); font-family:'IBM Plex Sans', sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  body::before{ content:""; position:fixed; inset:0; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 44px 44px; opacity:0.12; pointer-events:none; z-index:0; }
+  h1,h2,h3{ font-family:'Space Grotesk', sans-serif; letter-spacing:-0.01em; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  a{ color:var(--amber); }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 24px; position:relative; z-index:1; }
+  header.site{ position:sticky; top:0; z-index:50; backdrop-filter: blur(10px); background:rgba(14,20,24,0.85); border-bottom:1px solid var(--line); }
+  .nav-inner{ max-width:1180px; margin:0 auto; padding:16px 28px; display:flex; align-items:center; justify-content:space-between; }
+  .brand{ display:flex; align-items:center; gap:10px; font-family:'Space Grotesk'; font-weight:700; font-size:16px; letter-spacing:0.02em; text-decoration:none; color:var(--paper); }
+  .brand .mark{ width:30px; height:30px; flex-shrink:0; }
+  .brand .mark svg{ width:100%; height:100%; display:block; }
+  .btn{ display:inline-flex; align-items:center; gap:8px; padding:11px 20px; border-radius:2px; font-weight:600; font-size:14px; text-decoration:none; cursor:pointer; }
+  .btn-amber{ background:var(--amber); color:#14181C; }
+  main{ padding:64px 0 96px; }
+  .breadcrumb{ font-family:'IBM Plex Mono'; font-size:12px; color:var(--paper-dim); margin-bottom:24px; }
+  .breadcrumb a{ color:var(--paper-dim); text-decoration:none; }
+  .breadcrumb a:hover{ color:var(--amber); }
+  .eyebrow{ display:inline-flex; align-items:center; gap:8px; font-family:'IBM Plex Mono'; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--amber); border:1px solid var(--amber-dim); padding:6px 12px; border-radius:2px; margin-bottom:20px; }
+  .eyebrow::before{ content:""; width:6px; height:6px; background:var(--amber); border-radius:50%; }
+  h1{ font-size:36px; line-height:1.18; font-weight:700; color:#fff; margin-bottom:18px; }
+  .lead{ font-size:17px; color:var(--paper-dim); margin-bottom:40px; max-width:60ch; }
+  h2{ font-size:22px; color:#fff; margin:44px 0 16px; font-weight:600; }
+  p{ color:var(--paper-dim); font-size:15.5px; margin:0 0 14px; }
+  ul.feat{ margin:20px 0; padding:0; list-style:none; }
+  ul.feat li{ padding:12px 0 12px 28px; border-bottom:1px solid var(--line); position:relative; color:var(--paper); font-size:15px; }
+  ul.feat li::before{ content:"→"; position:absolute; left:0; color:var(--amber); font-family:'IBM Plex Mono'; }
+  .faq-item{ border-bottom:1px solid var(--line); padding:18px 0; }
+  .faq-item h3{ font-size:16px; color:#fff; margin-bottom:8px; font-weight:600; }
+  .faq-item p{ margin:0; }
+  .cta-box{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:32px; margin-top:48px; text-align:center; position:relative; overflow:hidden; }
+  .cta-box::before{ content:""; position:absolute; top:0; left:0; right:0; height:5px; background:var(--danger-tape); }
+  .cta-box h2{ margin-top:0; }
+  footer{ border-top:1px solid var(--line); padding:28px 0; }
+  .footer-inner{ max-width:1180px; margin:0 auto; padding:0 28px; display:flex; justify-content:space-between; font-size:13px; color:var(--paper-dim); flex-wrap:wrap; gap:12px; }
+  @media (max-width:640px){ h1{font-size:28px;} }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">
+      <span class="mark"><svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><polygon points="200,26 344,108 344,272 200,354 56,272 56,108" fill="none" stroke="#E8940C" stroke-width="14" stroke-linejoin="round"/><text x="200" y="242" font-family="Arial" font-weight="700" font-size="150" text-anchor="middle" letter-spacing="-6" fill="#E9EDEF">ÜP</text></svg></span>
+      ÜRETİMPRATİK ENDÜSTRİYEL YAZILIMLAR
+    </a>
+    <a class="btn btn-amber" href="https://wa.me/905531873452" target="_blank" rel="noopener">WhatsApp'tan Yaz</a>
+  </div>
+</header>
+<main>
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">Ana Sayfa</a> / Üretim Planlama Danışmanlığı</div>
+    <div class="eyebrow">İstanbul Geneli</div>
+    <h1>İstanbul'da Üretim Planlama Danışmanlığı</h1>
+    <p class="lead">Kablo/tel, metal, plastik ve ambalaj sektörlerinde 25 yılı aşkın üretim planlama tecrübesiyle; iş emri akışı, makine yükleme ve sevkiyat planlama süreçlerinizi birlikte kuruyoruz.</p>
+
+    <h2>Ne İşe Yarar</h2>
+    <p>Üretim planlama danışmanlığı, siparişten sevkiyata kadar olan süreci sistematik hale getirir: doğru temrin tarihi verme, makine kapasitesine göre iş dağıtımı ve düzenli verimlilik raporlaması.</p>
+    <ul class="feat">
+      <li>Kapasite ve makine yükleme analizi</li>
+      <li>Temrin/sevkiyat planlama süreci kurulumu</li>
+      <li>ISO 9001-14001 kayıt düzeni desteği</li>
+      <li>A Sınıfı İSG Uzmanlığı ile birlikte saha güvenliği danışmanlığı</li>
+    </ul>
+    <h2>Kimler İçin Uygun</h2>
+    <p>Planlama sorumlusu istihdam etmeden, dışarıdan uzman desteğiyle üretim süreçlerini düzene sokmak isteyen küçük ve orta ölçekli fabrikalar için uygundur.</p>
+    <div class="faq-item">
+      <h3>Danışmanlık nasıl yürütülüyor?</h3>
+      <p>Yerinde veya uzaktan düzenli görüşmelerle, mevcut süreç incelenir ve adım adım iyileştirme planı uygulanır.</p>
+    </div>
+    
+    <div class="cta-box">
+      <h2>Projenizi konuşalım</h2>
+      <p>İlk görüşme ücretsizdir. WhatsApp üzerinden birkaç dakikada durumunuzu değerlendirelim.</p>
+      <a class="btn btn-amber" href="https://wa.me/905531873452" target="_blank" rel="noopener">WhatsApp'tan Yaz →</a>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-inner">
+    <div>© 2026 ÜretimPratik Endüstriyel Yazılımlar — Satılmış Çam</div>
+    <div class="mono">Kartal · İstanbul</div>
+  </div>
+</footer>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Excel VBA Otomasyonu İstanbul | ÜretimPratik Endüstriyel Yazılımlar</title>
+<meta name="description" content="Elle tutulan Excel tablolarını veritabanına bağlı otomatik raporlara dönüştürüyoruz. İstanbul'daki fabrikalar için Excel-VBA otomasyon hizmeti.">
+<link rel="canonical" href="https://uretimpratik.com.tr/excel-vba-otomasyonu.html">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cpolygon points='200,26 344,108 344,272 200,354 56,272 56,108' fill='%230E1418'/%3E%3Cpolygon points='200,26 344,108 344,272 200,354 56,272 56,108' fill='none' stroke='%23E8940C' stroke-width='16'/%3E%3Ctext x='200' y='245' font-family='Arial' font-weight='700' font-size='150' text-anchor='middle' letter-spacing='-6' fill='%23E9EDEF'%3E%C3%9CP%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E1418; --panel:#151D24; --panel-2:#1B252D; --line:#2A3740;
+    --paper:#E9EDEF; --paper-dim:#93A2AB; --amber:#E8940C; --amber-dim:#B87409; --cyan:#5FB8B0;
+    --danger-tape:repeating-linear-gradient(135deg, var(--amber) 0 14px, #14181C 14px 28px);
+    --radius: 3px; --maxw: 900px;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--ink); color:var(--paper); font-family:'IBM Plex Sans', sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  body::before{ content:""; position:fixed; inset:0; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 44px 44px; opacity:0.12; pointer-events:none; z-index:0; }
+  h1,h2,h3{ font-family:'Space Grotesk', sans-serif; letter-spacing:-0.01em; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  a{ color:var(--amber); }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 24px; position:relative; z-index:1; }
+  header.site{ position:sticky; top:0; z-index:50; backdrop-filter: blur(10px); background:rgba(14,20,24,0.85); border-bottom:1px solid var(--line); }
+  .nav-inner{ max-width:1180px; margin:0 auto; padding:16px 28px; display:flex; align-items:center; justify-content:space-between; }
+  .brand{ display:flex; align-items:center; gap:10px; font-family:'Space Grotesk'; font-weight:700; font-size:16px; letter-spacing:0.02em; text-decoration:none; color:var(--paper); }
+  .brand .mark{ width:30px; height:30px; flex-shrink:0; }
+  .brand .mark svg{ width:100%; height:100%; display:block; }
+  .btn{ display:inline-flex; align-items:center; gap:8px; padding:11px 20px; border-radius:2px; font-weight:600; font-size:14px; text-decoration:none; cursor:pointer; }
+  .btn-amber{ background:var(--amber); color:#14181C; }
+  main{ padding:64px 0 96px; }
+  .breadcrumb{ font-family:'IBM Plex Mono'; font-size:12px; color:var(--paper-dim); margin-bottom:24px; }
+  .breadcrumb a{ color:var(--paper-dim); text-decoration:none; }
+  .breadcrumb a:hover{ color:var(--amber); }
+  .eyebrow{ display:inline-flex; align-items:center; gap:8px; font-family:'IBM Plex Mono'; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--amber); border:1px solid var(--amber-dim); padding:6px 12px; border-radius:2px; margin-bottom:20px; }
+  .eyebrow::before{ content:""; width:6px; height:6px; background:var(--amber); border-radius:50%; }
+  h1{ font-size:36px; line-height:1.18; font-weight:700; color:#fff; margin-bottom:18px; }
+  .lead{ font-size:17px; color:var(--paper-dim); margin-bottom:40px; max-width:60ch; }
+  h2{ font-size:22px; color:#fff; margin:44px 0 16px; font-weight:600; }
+  p{ color:var(--paper-dim); font-size:15.5px; margin:0 0 14px; }
+  ul.feat{ margin:20px 0; padding:0; list-style:none; }
+  ul.feat li{ padding:12px 0 12px 28px; border-bottom:1px solid var(--line); position:relative; color:var(--paper); font-size:15px; }
+  ul.feat li::before{ content:"→"; position:absolute; left:0; color:var(--amber); font-family:'IBM Plex Mono'; }
+  .faq-item{ border-bottom:1px solid var(--line); padding:18px 0; }
+  .faq-item h3{ font-size:16px; color:#fff; margin-bottom:8px; font-weight:600; }
+  .faq-item p{ margin:0; }
+  .cta-box{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:32px; margin-top:48px; text-align:center; position:relative; overflow:hidden; }
+  .cta-box::before{ content:""; position:absolute; top:0; left:0; right:0; height:5px; background:var(--danger-tape); }
+  .cta-box h2{ margin-top:0; }
+  footer{ border-top:1px solid var(--line); padding:28px 0; }
+  .footer-inner{ max-width:1180px; margin:0 auto; padding:0 28px; display:flex; justify-content:space-between; font-size:13px; color:var(--paper-dim); flex-wrap:wrap; gap:12px; }
+  @media (max-width:640px){ h1{font-size:28px;} }
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">
+      <span class="mark"><svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"><polygon points="200,26 344,108 344,272 200,354 56,272 56,108" fill="none" stroke="#E8940C" stroke-width="14" stroke-linejoin="round"/><text x="200" y="242" font-family="Arial" font-weight="700" font-size="150" text-anchor="middle" letter-spacing="-6" fill="#E9EDEF">ÜP</text></svg></span>
+      ÜRETİMPRATİK ENDÜSTRİYEL YAZILIMLAR
+    </a>
+    <a class="btn btn-amber" href="https://wa.me/905531873452" target="_blank" rel="noopener">WhatsApp'tan Yaz</a>
+  </div>
+</header>
+<main>
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">Ana Sayfa</a> / Excel VBA Otomasyonu</div>
+    <div class="eyebrow">İstanbul Geneli</div>
+    <h1>Excel VBA Otomasyonu</h1>
+    <p class="lead">Mevcut Excel alışkanlığınızı değiştirmeden, elle girilen tabloları ODBC ile veritabanına bağlı, otomatik güncellenen raporlara dönüştürüyoruz.</p>
+
+    <h2>Ne İşe Yarar</h2>
+    <p>Birçok fabrikada üretim, stok veya kalite verileri hâlâ dağınık Excel dosyalarında tutulur. VBA otomasyonu, bu dosyaları birbirine ve merkezi bir veritabanına bağlayarak elle kopyala-yapıştır işini ortadan kaldırır.</p>
+    <ul class="feat">
+      <li>ODBC ile SQLite/Access veritabanı bağlantısı</li>
+      <li>Çok sayfalı, otomatik güncellenen PDF/rapor üretimi</li>
+      <li>Departmanlar arası veri birleştirme (konform, kağıt, cam, depo gibi)</li>
+      <li>Mevcut Excel dosya yapınız korunur, üzerine otomasyon eklenir</li>
+    </ul>
+    <h2>Kimler İçin Uygun</h2>
+    <p>Tam bir yazılım sistemine henüz hazır olmayan, ama Excel'deki elle işlemlerden kurtulmak isteyen küçük ve orta ölçekli işletmeler için düşük maliyetli bir ilk adımdır.</p>
+    <div class="faq-item">
+      <h3>Yeni bir program öğrenmemiz gerekiyor mu?</h3>
+      <p>Hayır, mevcut Excel dosyalarınız üzerinde çalışırız. Arayüz aynı kalır, arka planda otomasyon eklenir.</p>
+    </div>
+    
+    <div class="cta-box">
+      <h2>Projenizi konuşalım</h2>
+      <p>İlk görüşme ücretsizdir. WhatsApp üzerinden birkaç dakikada durumunuzu değerlendirelim.</p>
+      <a class="btn btn-amber" href="https://wa.me/905531873452" target="_blank" rel="noopener">WhatsApp'tan Yaz →</a>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-inner">
+    <div>© 2026 ÜretimPratik Endüstriyel Yazılımlar — Satılmış Çam</div>
+    <div class="mono">Kartal · İstanbul</div>
+  </div>
+</footer>
+</body>
+</html>
